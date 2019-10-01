@@ -9,8 +9,9 @@ public class BankingApplication {
 	}
 
 }
-class BankAccount{
+class BankAccount {
 	int balance;
+	//amine comit test
 	int previousTransaction;
 	String customerName;
 	String customerId;
