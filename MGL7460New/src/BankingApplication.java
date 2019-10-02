@@ -9,11 +9,12 @@ public class BankingApplication {
 	}
 
 }
-//elham first commit
+
 class BankAccount {
 	int balance;
 	//amine comit test
 	int previousTransaction;
+	int averageAccount;
 	String customerName;
 	String customerId;
 	
@@ -58,6 +59,21 @@ class BankAccount {
 		System.out.println("No transaction occured");
 	}
 }
+	void getAverageAccount()
+	{
+		if(balance > 0)
+		{
+			averageAccount=balance/12;
+			
+			System.out.println("Your Average Account Per Year:  "+averageAccount);
+		}
+	else if(balance <= 0)
+	{
+	
+		System.out.println("Your Debit Haveto Be Positive!");
+	}
+	
+}
 	void showMenu()
 	{
 		char option='\0';
@@ -70,7 +86,9 @@ class BankAccount {
 		System.out.println("B. Deposit");
 		System.out.println("C. Withdraw");
 		System.out.println("D. Previous transaction");
+		System.out.println("V. Average Account");
 		System.out.println("E. Exit");
+		
 		
 		do
 		{
@@ -110,6 +128,13 @@ class BankAccount {
 			case 'D':
 				System.out.println("----------------------------------------");
 				getPreviousTransaction();
+				System.out.println("----------------------------------------");
+				System.out.println("\n");
+				break;
+				
+			case 'V':
+				System.out.println("----------------------------------------");
+				getAverageAccount();
 				System.out.println("----------------------------------------");
 				System.out.println("\n");
 				break;
