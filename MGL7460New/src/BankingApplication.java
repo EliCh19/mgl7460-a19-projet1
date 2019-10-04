@@ -81,8 +81,9 @@ class BankAccount {
 		char option='\0';
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println("BANK ONLINE");
-		System.out.println("Welcome Mr "+customerId);
+		System.out.println("BANK ONLINE SYSTEM");
+		System.out.println("Welcome Mr: "+customerName);
+		System.out.println("Your ID is: "+customerId);
 		System.out.println("\n");
 		System.out.println("A. Check Balance");
 		System.out.println("B. Deposit");
