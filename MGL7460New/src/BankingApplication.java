@@ -24,6 +24,8 @@ class BankAccount {
 		customerId = cid;
 	}
 	
+
+
 	void deposit (int amount)
 	{
 		
@@ -52,7 +54,7 @@ class BankAccount {
 	else if(previousTransaction < 0)
 	{
 	
-		System.out.println("Withdrawn: "+Math.abs(previousTransaction));
+		System.out.println("Withdraw: "+Math.abs(previousTransaction));
 	}
 	else
 	{
