@@ -3,7 +3,7 @@ public class BankingApplication {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		BankAccount obj1 = new BankAccount("AHMED"," MGL7460");
+		BankAccount obj1 = new BankAccount("AHMED 1"," MGL7460");
 		obj1.showMenu();
 
 	}
