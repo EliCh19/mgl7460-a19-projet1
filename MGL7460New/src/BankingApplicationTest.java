@@ -10,10 +10,11 @@ public class BankingApplicationTest {
 	public void testdeposit()
 	{
 		int expected = 5000;
+		int amount = 4000;
 		int balance = 1000;
-		int deposit = 4000;
-		balance = balance + deposit;
-		assertEquals(expected, balance );
+	    balance = balance + amount;
+		
+		assertEquals(expected , balance  );
 		
 				}
 	

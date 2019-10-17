@@ -31,7 +31,7 @@ class BankAccount {
 		
 		if (amount !=0)
 		{
-			balance = balance + amount;
+			balance = balance+amount;
 			previousTransaction = amount;
 		}
 	}
@@ -146,7 +146,7 @@ class BankAccount {
 				System.out.println("****************************************");
 				
 				default:
-					System.out.println("OUPS!!!!! Invalid Option!!!!!. Please enter again");
+					System.out.println("OUPS!!!!! Invalid Option!!!!!. Please enter valid option");
 					break;
 			
 				}	

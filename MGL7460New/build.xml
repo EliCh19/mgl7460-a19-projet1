@@ -1,37 +1,174 @@
-<project basedir="C:\Users\ASUS\git\BankAccounting\MGL7460New" default="build" name="MGL7460New">
-    <property environment="env"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.8"/>
-    <property name="source" value="1.8"/>
-    <path id="MGL7460New.classpath">
-        <pathelement location="bin"/>
-    </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src">
-                <exclude name="**/*.launch"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<project  xmlns:cs="antlib:com.puppycrawl.tools.checkstyle.ant" name="JUnitHelloWord" default="all" basedir="C:\BankingApplication-MGL7460-Groupe8">
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- Edit here: select main class to run test suite -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <property name="junit.class.name" value="sample.BankingApplicationTest"/>
+	 <!-- <property environment="env"/> -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- PLEASE DO NOT EDIT FROM HERE TO END OF FILE -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <description>Builds, tests, and runs Banking application</description>
+    <property name="test.dir" location="${basedir}/src/test/java"/>
+    <property name="bin.dir" value="${basedir}/target"/>
+    <property name="report.dir" location="${bin.dir}/junit-reports"/>
+    <property name="report.data.dir" location="${bin.dir}/junit-reports/data"/>
+	<property name="docs.dir" location="${basedir}/target/docs"/>
+	<property name="run.dir" location="${basedir}/target"/>
+	<property name="ivy.install.version" value="2.1.0-rc2" />
+    <!-- You may place ivy.jar into other folder if you want to keep folder lib clean-->
+    <property name="ivy.jar.dir" value="${basedir}/libs" />
+    <property name="ivy.jar.file" value="${basedir}/libs/ivy.jar" />
+	
+	
+	 <property name = "checkstyle.home.dir" location = "C:\BankingApplication-MGL7460-Groupe8" />
+  <property name="checkstyle.sourcepath"    value="src"                      />
+  <property name="checkstyle.report.path"   value="."                        />
+  <property name="checkstyle.report.style"  value="${basedir}\docs\checkstyle-simple.xsl"    />
+  <property name="checkstyle.report.xml"    value="${basedir}\reports\checkstyle-report.xml"    />
+  <property name="checkstyle.report.html"   value="${basedir}\reports\checkstyle-report.html"   />
+   <property name="checkstyle.config"   value="C:\BankingApplication-MGL7460-Groupe8\libs\checkstyle.xml"   />
+	
+    <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties"
+         classpath="C:/apache-ant-1.9.14/lib/checkstyle-8.25-all.jar"/>
+    <!-- the location of all the jar files we downloaded -->
+    <property name="jars" value="libs"/>
+ <target name="init">
+        <mkdir dir="target"/>
+        <copy includeemptydirs="false" todir="target">
+            <fileset dir="src/main">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
     </target>
-    <target name="clean">
-        <delete dir="bin"/>
+    <!-- the ant job for cleaning up our environment -->
+    <target name="clean" description="Remove all .class files">
+        <delete dir="target"/>
+        <delete includeEmptyDirs="true" failonerror="false">
+            <fileset dir="${test.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
     </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
-            <classpath refid="MGL7460New.classpath"/>
-        </javac>
+    <target name="classpath">
+        <path id="classpath">
+            <fileset dir="${jars}">
+                <include name="**/*.jar" />
+            </fileset>
+            <pathelement location="${bin.dir}/classes" />
+            <pathelement location="${bin.dir}/test-classes" />
+        </path>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="BankingApplication">
-        <java classname="BankingApplication" failonerror="true" fork="yes">
-            <classpath refid="MGL7460New.classpath"/>
-        </java>
+
+    <!-- the ant job for compiling our code -->
+    <target name="compile" depends="clean,classpath">
+        <mkdir dir="${bin.dir}"/>
+        <mkdir dir="${bin.dir}/classes"/>
+        <javac srcdir="src/main" destdir="${bin.dir}/classes" classpathref="classpath" includeantruntime="false"/>
     </target>
+
+    <!-- the ant job for compiling our test code -->
+    <target name="compile-test" depends="compile">
+        <mkdir dir="${bin.dir}/test-classes"/>
+        <javac srcdir="src/test/java" destdir="${bin.dir}/test-classes" classpathref="classpath" includeantruntime="false"/>
+    </target>
+
+    <target name="test-jar" depends="compile-test">
+        <jar destfile="${bin.dir}/${ant.project.name}.jar" basedir="${bin.dir}/test-classes">
+            <manifest>
+                <attribute name="Main-Class" value="${junit.class.name}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="package" depends="test-jar">
+    </target>
+	
+
+    <target name="all" depends="compile-test,checkstyle,findbugs,run-jdepend">
+        <mkdir dir="${report.data.dir}"/>
+        <mkdir dir="${report.dir}"/>
+        <junit fork="no" haltonfailure="yes" showoutput="yes" printsummary="true">
+            <test name="${junit.class.name}" todir="${report.data.dir}"/>
+            <formatter type="brief" usefile="false"/>
+            <classpath refid="classpath" />
+        </junit>
+       
+    </target>
+	
+	 <target name="run-jdepend" depends="compile" description="Runs JDepend on itself">
+    <java classname="jdepend.textui.JDepend" fork="yes">
+      <classpath refid="classpath"/>
+      <arg file="${run.dir}"/>
+    </java>
+  </target>
+<target name="checkstyle"
+        description="Generates a report of code convention violations.">
+
+  <checkstyle config="C:\BankingApplication-MGL7460-Groupe8\docs\sun_checks.xml"
+              failureProperty="checkstyle.failure"
+              failOnViolation="false">
+    <formatter type="xml" tofile="C:\BankingApplication-MGL7460-Groupe8\reports\checkstyle_report.xml"/>
+    <fileset dir="C:\BankingApplication-MGL7460-Groupe8\src" includes="**/*.java"/>
+  </checkstyle>
+
+  <style in="C:\BankingApplication-MGL7460-Groupe8\reports\checkstyle_report.xml" out="C:\BankingApplication-MGL7460-Groupe8\reports\checkstyle_report.html"
+      style="${checkstyle.report.style}"/>
+</target>
+
+
+<!--findbugs target-->
+ <path id="findbugs.classpath">
+  <fileset dir="C:\BankingApplication-MGL7460-Groupe8\libs\findBugs">
+   <include name="*.jar" />
+  </fileset>
+ </path>
+ 
+<!--Creating the required directories for findbugs-->
+    <target name="findbugs-init" description="Creates the required directories for findbugs.">
+   <echo>******Cleaning the ${basedir}/findbugs-reports******</echo>
+   <delete dir="${basedir}/findbugs-reports" />
+   <echo>******Creating the required directories for findbugs******</echo>
+   <mkdir dir="${basedir}/findbugs-reports" />
+    </target>
+
+ <target name="findbugs" depends="findbugs-init,compile" description="Run code analysis over code to check for problems.">
+         <!-- Fail this target if FindBugs is not installed. -->
+  <echo>*****Performing FindBugs analysis on banking application *****</echo>
+         <taskdef name="findbugs"
+                  classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+                  classpathref="findbugs.classpath" />
+  
+            <!-- Run FindBugs.for HTML output-->
+   <findbugs classpathref="findbugs.classpath"
+          output="html"
+                outputFile="${basedir}/findbugs-reports/findbugs.html"
+         stylesheet="${basedir}/findbugs/fancy-hist.xsl">
+
+           <sourcePath path="${src.dir}" />
+   
+  <auxclasspath refid="classpath"/>
+    
+  <class location="${bin.dir}/classes" />
+  
+        </findbugs>
+ 
+  <!-- Run FindBugs.for XML output -->
+ <findbugs classpathref="findbugs.classpath"
+         output="xml"
+                outputFile="${basedir}/findbugs-reports/findbugs.xml">
+           <sourcePath path="${src.dir}" />
+
+
+  <auxclasspath refid="classpath"/>
+   
+  <class location="${bin.dir}/classes" />
+
+  </findbugs>
+   <echo>*****FindBugs analysis report saved into ${basedir}/findbugs-  reports/findbugs.xml*****</echo>
+
+ </target>
+
+
+ 
 </project>
